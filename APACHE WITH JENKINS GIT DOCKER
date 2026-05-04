@@ -1,0 +1,44 @@
+Create repo on git hub name apache_webapp 
+Don’t Clone it (we will push directly without clone) 
+mkdir apache_webapp 
+cd apache_webapp 
+nano index.html 
+<h1> HELLO FROM CDAC </h1> 
+nano Dockerfile  
+FROM h pd:latest 
+RUN rm -rf /usr/local/apache2/htdocs/* 
+COPY index.html /usr/local/apache2/htdocs/ 
+Save it 
+Push to Github 
+git init 
+git add . 
+git commit -m “ini al commit” 
+git branch -M main 
+git remote add origin <git repo url > 
+git push -u origin main 
+username 
+token password 
+Create Freestyle Job 
+In Jenkins:  open             
+localhost:8080 or publicip:8080 if using ec2 
+3. Dashboard → New Item  
+4. Name:  anything what you want 
+4. Select:  
+Freestyle project 
+5. Click OK  
+Connect GitHub Repo 
+In job configura on: 
+Source Code Management 
+ Select: Git  
+ Repository URL: your git repo url 
+ Branch:  
+*/main or */master as you have for your repo 
+Add Build Steps (MAIN PART) 
+Scroll → Build → Add build step → Execute shell 
+docker build -t apache_app . 
+docker run -d -p 80:80 apache_app 
+SAVE  
+AND BUILD NOW CLICK 
+CHECK CONSOLE OUTPUT on localhost:80 
+or on ec2                               
+publicip:80P
