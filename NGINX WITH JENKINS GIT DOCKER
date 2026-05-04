@@ -1,0 +1,76 @@
+Install Docker 
+sudo apt update 
+sudo apt install docker.io -y 
+sudo systemctl start docker 
+sudo systemctl enable docker 
+sudo usermod -aG docker $USER 
+newgrp docker     it refresh docker group 
+Verify: 
+docker –version 
+Install Jenkins       
+sudo apt update 
+(use Jenkins install linux website for commands) 
+sudo apt install fontconfig openjdk-21-jre 
+java --version 
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \ 
+h ps://pkg.jenkins.io/debian-stable/jenkins.io-2026.key 
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \ 
+h ps://pkg.jenkins.io/debian-stable binary/ | sudo tee \ 
+/etc/apt/sources.list.d/jenkins.list > /dev/null 
+sudo apt update 
+sudo apt install jenkins 
+sudo systemctl start jenkins 
+sudo systemctl enable jenkins 
+Allow Jenkins to Use Docker 
+sudo usermod -aG docker jenkins 
+sudo systemctl restart jenkins 
+Create repo on git hub name nginx_webapp 
+Don’t Clone it (we will push directly without clone) 
+mkdir nginx_webapp 
+cd nginx_webapp 
+nano index.html 
+<h1> HELLO FROM CDAC </h1> 
+nano Dockerfile  
+FROM nginx:latest 
+RUN rm -rf /usr/share/nginx/html/* 
+COPY index.html /usr/share/nginx/html/index.html 
+Save it 
+Push to Github 
+git init 
+git add . 
+git commit -m “ini al commit” 
+git branch -M main 
+git remote add origin <git repo url > 
+git push -u origin main 
+username 
+token password 
+Create Freestyle Job 
+In Jenkins:  open             
+localhost:8080 or publicip:8080 if using ec2 
+1. Dashboard → New Item  
+2. Name:  anything 
+3. Select:  
+Freestyle project 
+4. Click OK  
+ 
+Connect GitHub Repo 
+In job configura on: 
+ Source Code Management 
+ Select: Git  
+ Repository URL: your git repo url 
+ Branch:  
+*/main or */master as you have for your repo 
+ 
+Add Build Steps (MAIN PART) 
+Scroll → Build → Add build step → Execute shell 
+docker build -t nginx_app . 
+docker run -d -p 8081:80 nginx_app 
+ 
+SAVE  
+AND BUILD NOW CLICK 
+CHECK CONSOLE OUTPUT on localhost:8081 
+or on ec2                               publicip:8081 
+ 
+ 
+note for using any port on ec2 add security group inbound rules of that port then only it will 
+work
